@@ -4,35 +4,66 @@ package com.javacourse.stack;
  * Реализация стека на базе односвязного списка, с возможностью
  * поиска наибольшего и наименьшего элемента стека
  */
-public class LinkedStack<ItemTypeT> implements ExtremumStack<ItemTypeT> {
+public class LinkedStack<ItemTypeT extends Comparable<ItemTypeT>> implements ExtremumStack<ItemTypeT> {
+    private CustomLinkedList<ItemTypeT> store;
+    private CustomLinkedList<ItemTypeT> maxStore;
+    private CustomLinkedList<ItemTypeT> minStore;
 
-	@Override
-	public void push(ItemTypeT item) {
-		// TODO: замените тело метода на полноценную реализацию
-		throw new RuntimeException("Method not implemented");
-	}
+    public LinkedStack() {
+        this.store = new CustomLinkedList<>();
+        this.maxStore = new CustomLinkedList<>();
+        this.minStore = new CustomLinkedList<>();
+    }
 
-	@Override
-	public ItemTypeT pop() {
-		// TODO: замените тело метода на полноценную реализацию
-		throw new RuntimeException("Method not implemented");
-	}
+    @Override
+    public void push(ItemTypeT item) {
+        store.add(item);
+        addMax(item);
+        addMin(item);
+    }
 
-	@Override
-	public ItemTypeT peek() {
-		// TODO: замените тело метода на полноценную реализацию
-		throw new RuntimeException("Method not implemented");
-	}
+    private void addMax(ItemTypeT item) {
+        if (maxStore.isEmpty()) {
+            maxStore.add(item);
+        } else if (item != null && item.compareTo(maxStore.getLast()) >= 0) {
+            maxStore.add(item);
+        }
+    }
 
-	@Override
-	public ItemTypeT min() {
-		// TODO: замените тело метода на полноценную реализацию
-		throw new RuntimeException("Method not implemented");
-	}
+    private void addMin(ItemTypeT item) {
+        if (minStore.isEmpty()) {
+            minStore.add(item);
+        } else if (item != null && item.compareTo(minStore.getLast()) <= 0) {
+            minStore.add(item);
+        }
+    }
 
-	@Override
-	public ItemTypeT max() {
-		// TODO: замените тело метода на полноценную реализацию
-		throw new RuntimeException("Method not implemented");
-	}
+    @Override
+    public ItemTypeT pop() {
+        if (store.isEmpty()) throw new RuntimeException("Empty Stack Exception");
+        ItemTypeT top = store.getLast();
+        if (top != null && top.equals(maxStore.getLast())) maxStore.getCurrentItem();
+        if (top != null && top.equals(minStore.getLast())) minStore.getCurrentItem();
+        return store.getCurrentItem();
+    }
+
+    @Override
+    public ItemTypeT peek() {
+        if (isEmpty()) throw new RuntimeException("Empty Stack Exception");
+        return store.getLast();
+    }
+
+    public ItemTypeT max() {
+        if (store.isEmpty()) throw new RuntimeException("Empty Stack Exception");
+        return maxStore.getLast();
+    }
+
+    public ItemTypeT min() {
+        if (store.isEmpty()) throw new RuntimeException("Empty Stack Exception");
+        return minStore.getLast();
+    }
+
+    public boolean isEmpty() {
+        return store.isEmpty();
+    }
 }
