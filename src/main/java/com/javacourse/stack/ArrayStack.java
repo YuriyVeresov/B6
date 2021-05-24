@@ -61,6 +61,11 @@ public class ArrayStack<ItemTypeT extends Comparable<ItemTypeT>> implements Extr
         values[size--] = null;
         if (top == maxValues.peek()) maxValues.pop();
         if (top == minValues.peek()) minValues.pop();
+
+        int countNullValues = values.length - size; //свободные ячейки (null значения)
+        if (countNullValues > values.length * 0.5) {
+            trim();
+        }
         return top;
     }
 
